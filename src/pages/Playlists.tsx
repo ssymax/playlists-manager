@@ -1,6 +1,3 @@
-
-const Playlists = () => (
-  <>playlist</>
-)
+const Playlists = () => <>playlist</>;
 
 export default Playlists;

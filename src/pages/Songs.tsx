@@ -1,7 +1,3 @@
-
-
-const Songs = () => (
-  <>songs</>
-)
+const Songs = () => <>songs</>;
 
 export default Songs;
