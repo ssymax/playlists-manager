@@ -2,28 +2,30 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useMutation, useQueryClient } from 'react-query';
 import { useForm, Controller } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import EditIcon from '@material-ui/icons/Edit';
+import Input from '@material-ui/core/Input';
+import DeleteIcon from 'components/DeleteIcon/DeleteIcon';
+import EditIcon from 'components/EditIcon/EditIcon';
 import Loader from 'react-loader-spinner';
 import { deleteAuthor, updateAuthor } from 'api';
 import { AuthorsType } from 'types';
 
 const StyledInnerWrapper = styled.div`
   display: grid;
+  width: 300px;
+  height: 50px;
   grid-template-columns: 200px 30px 30px;
   place-items: center;
-  margin-bottom: 10px;
   font-size: 14px;
+  text-transform: uppercase;
   color: hsl(0, 0%, 100%);
-  background-color: hsl(120, 68%, 42%);
-  padding: 15px;
   border-radius: 5px;
-  align-self: center;
+  border: 2px solid #2f3f59;
+  margin-bottom: 10px;
 `;
 
 const ItemForm = styled.form`
   display: flex;
+  align-self: center;
   align-items: center;
 `;
 
@@ -41,29 +43,13 @@ const StyledSubmitButton = styled.button`
   }
 `;
 
-const StyledDeleteIcon = styled(HighlightOffIcon)`
-  justify-self: center;
-  &:hover {
-    cursor: pointer;
-    fill: hsl(0, 0%, 0%);
-  }
-`;
-
-const StyledEditIcon = styled(EditIcon)`
-  justify-self: center;
-
-  &:hover {
-    cursor: pointer;
-    fill: hsl(0, 0%, 0%);
-  }
-`;
-
 const AuthorsListItem = ({ name, id }: AuthorsType) => {
   const [isInput, setInput] = useState<boolean>(false);
 
   const { register, handleSubmit, control } = useForm<AuthorsType>();
 
   const queryClient = useQueryClient();
+
   const { mutateAsync, isLoading } = useMutation(deleteAuthor);
   const { mutateAsync: mutateAuthor } = useMutation(updateAuthor);
 
@@ -78,7 +64,7 @@ const AuthorsListItem = ({ name, id }: AuthorsType) => {
 
   const onSubmit = async (data: any) => {
     await mutateAuthor({ ...data, id });
-    queryClient.refetchQueries('fetchAuthors');
+    await queryClient.refetchQueries('fetchAuthors');
     await setInput(false);
   };
 
@@ -87,7 +73,7 @@ const AuthorsListItem = ({ name, id }: AuthorsType) => {
       {isInput ? (
         <ItemForm onSubmit={handleSubmit(onSubmit)}>
           <Controller
-            as={<TextField />}
+            as={<Input />}
             name="name"
             control={control}
             {...register('name', {
@@ -106,12 +92,12 @@ const AuthorsListItem = ({ name, id }: AuthorsType) => {
         <p>{name}</p>
       )}
 
-      <StyledEditIcon onClick={readAuthor} />
+      <EditIcon onClick={readAuthor} />
 
       {isLoading ? (
         <Loader type="Oval" color="#fff" height={10} width={10} />
       ) : (
-        <StyledDeleteIcon onClick={removeAuthor} />
+        <DeleteIcon onClick={removeAuthor} />
       )}
     </StyledInnerWrapper>
   );

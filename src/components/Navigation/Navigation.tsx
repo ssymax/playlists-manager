@@ -5,10 +5,11 @@ const StyledNavWrapper = styled.nav`
   display: flex;
   height: 150px;
   width: 100%;
-  position: fixed;
   justify-content: center;
   align-items: center;
-  bottom: 0;
+  top: 0;
+  z-index: 20;
+  background-color: #2f3f59;
 `;
 
 const NavLinksWrapper = styled.ul`

@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/styles';
 
 export const useStyles = makeStyles({
   addField: {
+    marginLeft: '10px',
     '& label': {
       color: 'white',
       fontSize: '12px',
@@ -26,5 +27,12 @@ export const useStyles = makeStyles({
         color: 'white',
       },
     },
+  },
+  selectField: {
+    border: '1px solid white',
+    borderRadius: '5%',
+
+    width: '150px',
+    height: '49px',
   },
 });

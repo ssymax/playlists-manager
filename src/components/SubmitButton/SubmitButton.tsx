@@ -12,8 +12,9 @@ const StyledButton = styled(Button)({
   fontSize: '1.4rem',
   letterSpacing: '1px',
   width: '200px',
+  marginLeft: '10px',
   '&:hover': {
-    background: 'hsla(108, 100%, 39%, 1)',
+    background: 'hsla(108, 100%, 39%, 0.7)',
   },
 });
 

@@ -12,7 +12,6 @@ export type SongType = {
   title: string;
   duration: number;
   author: AuthorsType;
-  playlists: PlaylistType[];
 };
 
 export type PlaylistType = {

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import GlobalStyle from 'assets/styles/GlobalStyle';
@@ -15,9 +15,12 @@ const Root = () => {
       <Router>
         <GlobalStyle />
         <MainTemplate>
-          <Route path="/authors" component={Authors} />
-          <Route path="/songs" component={Songs} />
-          <Route path="/playlists" component={Playlists} />
+          <Switch>
+            <Route exact path="/" render={() => <Redirect to="/authors" />} />
+            <Route path="/authors" component={Authors} />
+            <Route path="/songs" component={Songs} />
+            <Route path="/playlists" component={Playlists} />
+          </Switch>
         </MainTemplate>
       </Router>
       <ReactQueryDevtools initialIsOpen={false} />

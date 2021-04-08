@@ -4,11 +4,10 @@ import AuthorsListItem from 'components/AuthorsListItem/AuthorsListItem';
 import { fetchAuthors } from 'api';
 import { AuthorsType } from 'types';
 
-const StyledAuthorsList = styled.div`
+const AuthorsWrapper = styled.div`
   display: flex;
-  width: 300px;
-  justify-content: center;
   flex-direction: column;
+  align-items: center;
 `;
 
 function isError(error: unknown): error is Error {
@@ -27,13 +26,13 @@ const AuthorsList = () => {
   }
 
   return (
-    <StyledAuthorsList>
+    <AuthorsWrapper>
       {data.length === 0 ? (
-        <h1>add some authors</h1>
+        <h2>here you see authors</h2>
       ) : (
         data.map(({ name, id }: AuthorsType) => <AuthorsListItem id={id} key={id} name={name} />)
       )}
-    </StyledAuthorsList>
+    </AuthorsWrapper>
   );
 };
 
