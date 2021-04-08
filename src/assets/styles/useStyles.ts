@@ -31,8 +31,13 @@ export const useStyles = makeStyles({
   selectField: {
     border: '1px solid white',
     borderRadius: '5%',
-
     width: '150px',
     height: '49px',
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: '50%',
   },
 });

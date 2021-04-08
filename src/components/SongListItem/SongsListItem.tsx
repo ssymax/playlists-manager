@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useMutation, useQueryClient } from 'react-query';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import EditIcon from 'components/EditIcon/EditIcon';
 import DeleteIcon from 'components/DeleteIcon/DeleteIcon';
@@ -13,16 +12,6 @@ import { SongType } from 'types';
 import { useStyles } from 'assets/styles/useStyles';
 import SubmitButton from 'components/SubmitButton/SubmitButton';
 
-const useModalStyle = makeStyles((theme: Theme) =>
-  createStyles({
-    modal: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      top: '50%',
-    },
-  })
-);
 
 const StyledForm = styled.form`
   background-color: hsla(0, 100%, 100%, 0.3);
@@ -42,9 +31,7 @@ const StyledInnerWrapper = styled.div`
   grid-template-columns: 100px 200px 50px 30px 30px;
   align-items: center;
   justify-items: center;
-
   font-size: 14px;
-
   text-transform: uppercase;
   color: hsl(0, 0%, 100%);
   border-radius: 5px;
@@ -63,6 +50,7 @@ const SongsListItem = ({ id, title, author, duration }: SongType) => {
   const handleClose = () => setModal(false);
 
   const queryClient = useQueryClient();
+
   const { register, handleSubmit, control } = useForm<SongType>();
 
   const { mutateAsync, isLoading } = useMutation(deleteSong);
@@ -80,7 +68,6 @@ const SongsListItem = ({ id, title, author, duration }: SongType) => {
   };
 
   const classes = useStyles();
-  const modalClasses = useModalStyle();
 
   return (
     <>
@@ -91,7 +78,7 @@ const SongsListItem = ({ id, title, author, duration }: SongType) => {
 
         <EditIcon onClick={handleOpen} />
 
-        <Modal className={modalClasses.modal} open={isModal} onClose={handleClose}>
+        <Modal className={classes.modal} open={isModal} onClose={handleClose}>
           <StyledForm onSubmit={handleSubmit(onSubmit)}>
             <Controller
               as={<TextField />}

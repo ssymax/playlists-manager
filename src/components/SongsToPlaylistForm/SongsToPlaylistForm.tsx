@@ -12,6 +12,7 @@ import { fetchSongs, addPlaylist } from 'api';
 import { useStyles } from 'assets/styles/useStyles';
 import SubmitButton from 'components/SubmitButton/SubmitButton';
 import Header from 'components/Header/Header';
+import { SongType } from 'types';
 
 const StyledForm = styled.form`
   display: flex;
@@ -39,7 +40,7 @@ const SongToPLaylistForm = () => {
 
   const { mutateAsync, isLoading: isMutating } = useMutation(addPlaylist);
 
-  const { control, handleSubmit, getValues, errors } = useForm({
+  const { control, handleSubmit, getValues, errors, register } = useForm({
     resolver: yupResolver(Schema),
   });
 
@@ -57,8 +58,8 @@ const SongToPLaylistForm = () => {
     return newIds;
   };
 
-  const onSubmit = (data: any) => {
-    mutateAsync(data);
+  const onSubmit = async (data: any) => {
+    await mutateAsync(data);
   };
 
   return (
@@ -76,17 +77,21 @@ const SongToPLaylistForm = () => {
           defaultValue=""
           className={classes.addField}
           autoComplete="off"
-          rules={{ minLength: 1, required: true, maxLength: 50 }}
+          {...register("test", {
+            maxLength: 50,
+            minLength: 3,
+            required: true,
+        })}
         />
         <StyledHeader>pick songs</StyledHeader>
         <Controller
           name="songs"
           render={(props) =>
-            fetchedSongs.map((item: any) => (
+            fetchedSongs.map(({id, author, title}: SongType) => (
               <FormControlLabel
-                control={<Checkbox onChange={() => props.onChange(handleCheck(item.id))} />}
-                key={item.id}
-                label={`${item.author.name} - ${item.title}`}
+                control={<Checkbox onChange={() => props.onChange(handleCheck(id))} />}
+                key={id}
+                label={`${author.name} - ${title}`}
               />
             ))
           }
