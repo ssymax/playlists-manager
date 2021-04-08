@@ -126,6 +126,7 @@ const PlaylistsDnD = () => {
 
   const removePlaylist = async (id: number) => {
     await mutateAsync(id);
+    window.location.reload(); 
   };
 
   if (isLoading) {

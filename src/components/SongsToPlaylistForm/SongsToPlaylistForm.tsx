@@ -60,6 +60,7 @@ const SongToPLaylistForm = () => {
 
   const onSubmit = async (data: any) => {
     await mutateAsync(data);
+    window.location.reload(); 
   };
 
   return (
