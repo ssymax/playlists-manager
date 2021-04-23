@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { deletePlaylist } from 'api';
+import { deletePlaylist, fetchPlaylists } from 'api';
 import DeleteIcon from 'components/DeleteIcon/DeleteIcon';
 import { SongType, PlaylistType } from 'types';
-import axios from 'axios';
 
 const PlaylistWrapper = styled.div`
   display: flex;
@@ -20,6 +19,7 @@ const Playlist = styled.div`
   width: 300px;
   border: 2px solid #2f3f59;
   margin-bottom: 50px;
+  height: min-content;
 `;
 
 const PlaylistHeader = styled.div`
@@ -77,21 +77,22 @@ const move = (source: any, destination: any, droppableSource: any, droppableDest
 
 const PlaylistsDnD = () => {
   const { mutateAsync, isLoading } = useMutation(deletePlaylist);
+  const { data, error, isLoading: isFetching } = useQuery('fetchPlaylists', fetchPlaylists);
   const [playlists, setPlaylists] = useState([]);
   const [songs, setSongs] = useState([[] as any]);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios('http://sandbox.aurafutures.io/ssymax-playlists');
-      const playlists = result.data as PlaylistType[];
-      setPlaylists(playlists as any);
+    if (data) {
+      setPlaylists(data as any);
       const songsArrays: any = [];
-      playlists.forEach(({ songs }) => songsArrays.push(songs));
+      data.forEach(({ songs }: any) => songsArrays.push(songs));
       setSongs(songsArrays);
-    };
+    }
+  }, [data]);
 
-    fetchData();
-  }, []);
+  if (isFetching) return <span>Loading...</span>;
+  if (error) return <span>Error</span>;
 
   const onDragEnd = (result: any) => {
     const { source, destination } = result;
@@ -126,7 +127,7 @@ const PlaylistsDnD = () => {
 
   const removePlaylist = async (id: number) => {
     await mutateAsync(id);
-    window.location.reload(); 
+    queryClient.refetchQueries('fetchPlaylists')
   };
 
   if (isLoading) {
