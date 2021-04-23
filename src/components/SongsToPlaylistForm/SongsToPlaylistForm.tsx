@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useForm, Controller } from 'react-hook-form';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -40,7 +40,9 @@ const SongToPLaylistForm = () => {
 
   const { mutateAsync, isLoading: isMutating } = useMutation(addPlaylist);
 
-  const { control, handleSubmit, getValues, errors, register } = useForm({
+  const queryClient = useQueryClient();
+
+  const { control, handleSubmit, getValues, errors } = useForm({
     resolver: yupResolver(Schema),
   });
 
@@ -60,12 +62,12 @@ const SongToPLaylistForm = () => {
 
   const onSubmit = async (data: any) => {
     await mutateAsync(data);
-    window.location.reload(); 
+    queryClient.refetchQueries('fetchPlaylists');
   };
 
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
-      <StyledHeader>add name</StyledHeader>
+      <StyledHeader>name playlist</StyledHeader>
       <FormControl error={(errors.songs as any)?.message}>
         <FormHelperText>{(errors.songs as any)?.message}</FormHelperText>
         <Controller
@@ -78,17 +80,13 @@ const SongToPLaylistForm = () => {
           defaultValue=""
           className={classes.addField}
           autoComplete="off"
-          {...register("test", {
-            maxLength: 50,
-            minLength: 3,
-            required: true,
-        })}
+         
         />
         <StyledHeader>pick songs</StyledHeader>
         <Controller
           name="songs"
           render={(props) =>
-            fetchedSongs.map(({id, author, title}: SongType) => (
+            fetchedSongs.map(({ id, author, title }: SongType) => (
               <FormControlLabel
                 control={<Checkbox onChange={() => props.onChange(handleCheck(id))} />}
                 key={id}
